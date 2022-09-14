@@ -15,3 +15,5 @@ life_expect = cbind(life1,life2[,-1],life3[,-1],life4[,4],life4[,3],life4[,2])
 
 #clean column names
 colnames(life_expect) = c("State",1959:2016,2018:2020)
+
+#questions - are we removing particular states? what do we do about 2017?
