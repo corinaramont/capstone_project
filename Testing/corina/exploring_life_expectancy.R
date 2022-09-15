@@ -3,7 +3,7 @@ library(tidyr)
 library(ggplot2)
 
 #loads life expectancy data into file
-load("~/capstone_project/datasets/life_expectancies_1959_2020.Rda")
+load("~/capstone_project/datasets/life_expectancies_1959_2019.Rda")
 
 ################ DATA ORGANIZING & FILTERING ###################################
 
@@ -71,7 +71,7 @@ division7_life_expect = division7%>%group_by(Year)%>%
 
 #census region 4 - west
 region4 = life_expect%>%filter(State %in% c("AZ","CO","ID","MT","NV","NM",
-                                            "UT","WY","AK","CA","HI","OR","WA"))
+                                            "UT","WY","CA","OR","WA"))
 
 region4_life_expect = region4%>%group_by(Year)%>%
   summarise(avg_by_year=mean(Life_Expectancies))%>%mutate(Region="West")
@@ -83,10 +83,12 @@ division8_life_expect = division8%>%group_by(Year)%>%
   summarise(avg_by_year=mean(Life_Expectancies))%>%mutate(Division="Mountain")
 
 #(region 4) division 9 - pacific
-division9 = life_expect%>%filter(State %in% c("AK","CA","HI","OR","WA"))
+division9 = life_expect%>%filter(State %in% c("CA","OR","WA"))
 division9_life_expect = division9%>%group_by(Year)%>%
   summarise(avg_by_year=mean(Life_Expectancies))%>%mutate(Division="Pacific")
 
+
+##################### FINAL DATA FRAMES ########################################
 
 #new data frame for US state life expectancies by region
 regions_life_expect = rbind(region1_life_expect,region2_life_expect,
@@ -99,31 +101,32 @@ divisions_life_expect = rbind(division1_life_expect, division2_life_expect,
                               division7_life_expect, division8_life_expect, 
                               division9_life_expect)
 
+
 ##################### ALL GRAPHS ##############################################
 
-#graph for all states life expectancies 1959-2020
-ggplot(data=life_expect, aes(x=Year, y=Life_Expectancies, group=State)) + 
+#graph for all states life expectancies 1959-2019
+states_graph = ggplot(data=life_expect, aes(x=Year, y=Life_Expectancies, group=State)) + 
   geom_line(aes(color=State)) + geom_point(aes(color=State)) + 
-  ggtitle("US States Life Expectancies 1959-2020") + ylab("Life Expectancies (Years)")
+  ggtitle("US States Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 
 #graph for life expectancies by region
-ggplot(data=regions_life_expect, aes(x=Year, y=avg_by_year, group=Region)) + 
+regions_graph = ggplot(data=regions_life_expect, aes(x=Year, y=avg_by_year, group=Region)) + 
   geom_line(aes(color=Region)) + geom_point(aes(color=Region)) + 
-  ggtitle("US Regions Life Expectancies 1959-2020") + ylab("Life Expectancies (Years)")
+  ggtitle("US Regions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 #boxplot for life expectancies by region
-ggplot(data=regions_life_expect, aes(x=Region, y=avg_by_year, group=Region)) + 
+regions_box = ggplot(data=regions_life_expect, aes(x=Region, y=avg_by_year, group=Region)) + 
   geom_boxplot(aes(fill=Region)) +
-  ggtitle("US Regions Life Expectancies 1959-2020") + ylab("Life Expectancies (Years)")
+  ggtitle("US Regions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 
 #graph for life expectancies by division
-ggplot(data=divisions_life_expect, aes(x=Year, y=avg_by_year, group=Division)) + 
+divisions_graph = ggplot(data=divisions_life_expect, aes(x=Year, y=avg_by_year, group=Division)) + 
   geom_line(aes(color=Division)) + geom_point(aes(color=Division)) + 
-  ggtitle("US Divisions Life Expectancies 1959-2020") + ylab("Life Expectancies (Years)")
+  ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 #boxplot for life expectancies by division
-ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
+divisions_box = ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
   geom_boxplot(aes(fill=Division)) +
-  ggtitle("US Divisions Life Expectancies 1959-2020") + ylab("Life Expectancies (Years)")
+  ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
