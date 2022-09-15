@@ -30,7 +30,7 @@ table(is.na(life_expect)) #there are no other missing values
 
 life_expect = life_expect %>% 
   pivot_longer(cols = c(2:61), names_to = "Year", values_to = "Life_Expectancies")
-life_expect$Year = rep(c(1959:2016,2018,2020), 50)
+life_expect$Year = rep(c(1959:2016,2018,2019), 50)
 life_expect = life_expect%>%filter(!State %in% c("AK", "HI"))
 
 #saves life_expect dataframe to an Rda file
