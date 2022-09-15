@@ -5,7 +5,6 @@ library(ggplot2)
 #loads life expectancy data into file
 load("~/capstone_project/datasets/life_expectancies_1959_2019.Rda")
 
-life_expect%>%filter(Year==2019)
 ################ DATA ORGANIZING & FILTERING ###################################
 
 #census region 1 - northeast "CO", "ME", "MA", "NH", "RI", "VT", "NJ", "NY", "PA"
@@ -106,28 +105,28 @@ divisions_life_expect = rbind(division1_life_expect, division2_life_expect,
 ##################### ALL GRAPHS ##############################################
 
 #graph for all states life expectancies 1959-2019
-ggplot(data=life_expect, aes(x=Year, y=Life_Expectancies, group=State)) + 
+states_graph = ggplot(data=life_expect, aes(x=Year, y=Life_Expectancies, group=State)) + 
   geom_line(aes(color=State)) + geom_point(aes(color=State)) + 
   ggtitle("US States Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 
 #graph for life expectancies by region
-ggplot(data=regions_life_expect, aes(x=Year, y=avg_by_year, group=Region)) + 
+regions_graph = ggplot(data=regions_life_expect, aes(x=Year, y=avg_by_year, group=Region)) + 
   geom_line(aes(color=Region)) + geom_point(aes(color=Region)) + 
   ggtitle("US Regions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 #boxplot for life expectancies by region
-ggplot(data=regions_life_expect, aes(x=Region, y=avg_by_year, group=Region)) + 
+regions_box = ggplot(data=regions_life_expect, aes(x=Region, y=avg_by_year, group=Region)) + 
   geom_boxplot(aes(fill=Region)) +
   ggtitle("US Regions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 
 #graph for life expectancies by division
-ggplot(data=divisions_life_expect, aes(x=Year, y=avg_by_year, group=Division)) + 
+divisions_graph = ggplot(data=divisions_life_expect, aes(x=Year, y=avg_by_year, group=Division)) + 
   geom_line(aes(color=Division)) + geom_point(aes(color=Division)) + 
   ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
 
 #boxplot for life expectancies by division
-ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
+divisions_box = ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
   geom_boxplot(aes(fill=Division)) +
   ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
