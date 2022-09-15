@@ -15,8 +15,8 @@ statecodes = aqs_states()
 
 
 #Shortens the FIPS data to only the 48 continental states 
-continentalstates FIPS= statecodes[1:which(statecodes$state == "Wyoming"),][c(-which(statecodes$state == "Alaska"),-which(statecodes$state == "Hawaii"),-which(statecodes$state == "District Of Columbia") ),]
-teFIPS parameter below 
+continentalstatesFIPS= statecodes[1:which(statecodes$state == "Wyoming"),][c(-which(statecodes$state == "Alaska"),-which(statecodes$state == "Hawaii"),-which(statecodes$state == "District Of Columbia") ),]
+#teFIPS parameter below 
 # cat("c(",cleanedstatecodes,")", sep = "")
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
