@@ -108,6 +108,9 @@ divisions_life_expect = rbind(division1_life_expect, division2_life_expect,
 states_graph = ggplot(data=life_expect, aes(x=Year, y=Life_Expectancies, group=State)) + 
   geom_line(aes(color=State)) + geom_point(aes(color=State)) + 
   ggtitle("US States Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
+pdf(file = paste("~/capstone_project/figures/States Life Expectancies.pdf"),width = 9, height = 7)
+print(states_graph)
+dev.off()
 
 
 #graph for life expectancies by region
@@ -130,3 +133,6 @@ divisions_graph = ggplot(data=divisions_life_expect, aes(x=Year, y=avg_by_year, 
 divisions_box = ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
   geom_boxplot(aes(fill=Division)) +
   ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
+
+
+
