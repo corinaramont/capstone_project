@@ -115,22 +115,24 @@ states_graph = ggplot(data=life_expect, aes(x=Year, y=Life_Expectancies, group=S
 regions_graph = ggplot(data=regions_life_expect, aes(x=Year, y=avg_by_year, group=Region)) + 
   geom_line(aes(color=Region)) + geom_point(aes(color=Region)) + 
   ggtitle("US Regions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
+print(regions_graph)
+
 
 #boxplot for life expectancies by region
 regions_box = ggplot(data=regions_life_expect, aes(x=Region, y=avg_by_year, group=Region)) + 
   geom_boxplot(aes(fill=Region)) +
   ggtitle("US Regions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
-
+print(regions_box)
 
 #graph for life expectancies by division
 divisions_graph = ggplot(data=divisions_life_expect, aes(x=Year, y=avg_by_year, group=Division)) + 
   geom_line(aes(color=Division)) + geom_point(aes(color=Division)) + 
   ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
+print(divisions_graph)
 
 #boxplot for life expectancies by division
 divisions_box = ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
   geom_boxplot(aes(fill=Division)) +
   ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancies (Years)")
-
-
+print(divisions_box)
 
