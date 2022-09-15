@@ -5,6 +5,7 @@ library(ggplot2)
 #loads life expectancy data into file
 load("~/capstone_project/datasets/life_expectancies_1959_2019.Rda")
 
+life_expect%>%filter(Year==2019)
 ################ DATA ORGANIZING & FILTERING ###################################
 
 #census region 1 - northeast "CO", "ME", "MA", "NH", "RI", "VT", "NJ", "NY", "PA"

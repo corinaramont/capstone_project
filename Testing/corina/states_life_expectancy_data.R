@@ -34,4 +34,4 @@ life_expect$Year = rep(c(1959:2016,2018,2019), 50)
 life_expect = life_expect%>%filter(!State %in% c("AK", "HI"))
 
 #saves life_expect dataframe to an Rda file
-save(life_expect,file="~/capstone_project/datasets/life_expectancies_1959_2020.Rda")
+save(life_expect,file="~/capstone_project/datasets/life_expectancies_1959_2019.Rda")
