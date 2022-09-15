@@ -88,6 +88,8 @@ division9_life_expect = division9%>%group_by(Year)%>%
   summarise(avg_by_year=mean(Life_Expectancies))%>%mutate(Division="Pacific")
 
 
+##################### FINAL DATA FRAMES ########################################
+
 #new data frame for US state life expectancies by region
 regions_life_expect = rbind(region1_life_expect,region2_life_expect,
                             region3_life_expect,region4_life_expect)
@@ -98,6 +100,7 @@ divisions_life_expect = rbind(division1_life_expect, division2_life_expect,
                               division5_life_expect, division6_life_expect,
                               division7_life_expect, division8_life_expect, 
                               division9_life_expect)
+
 
 ##################### ALL GRAPHS ##############################################
 
