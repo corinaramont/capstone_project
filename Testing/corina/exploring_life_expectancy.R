@@ -136,3 +136,12 @@ divisions_box = ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year
   ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancy (Years)")
 print(divisions_box)
 
+##################### TESTING FOR STUFF ##############################################
+
+#tukey's test for the divisions (which mean is different from the rest?)
+divisions_aov = aov(avg_by_year~Division, data=divisions_life_expect)
+divisions_Tukey = TukeyHSD(divisions_aov)
+
+#tukey's test for regions
+regions_aov = aov(avg_by_year~Region, data=regions_life_expect)
+regions_Tukey = TukeyHSD(regions_aov)
