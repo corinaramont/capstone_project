@@ -34,13 +34,26 @@ bexarcounties = aqs_dailysummary_by_county(parameter = "42101",
                                            countycode = "029")
 colnames(bexarcounties)
 
-
-NClead1995= aqs_annualsummary_by_state(parameter = "45201",
-                           bdate = as.Date("19950515", format="%Y%m%d"),
-                           edate = as.Date("19950515", format = "%Y%m%d"),
+#Gets data from 1980-2020 from all STATES in the CO parameter
+all1995CO = aqs_annualsummary_by_state(parameter = "42101",
+                           bdate = as.Date("19800515", format="%Y%m%d"),
+                           edate = as.Date("20200515", format = "%Y%m%d"),
                            stateFIPS = "37")
 
-head(TX)
+#Verifies that the function works
+colnames(all1995CO)
+dim(all1995CO)
+all1995CO$year
+
+#gets all 48 states CO data from 1995 to 
+allstateCO1995 = aqs_annualsummary_by_state(parameter = "42101",
+                           bdate = as.Date("19950515", format="%Y%m%d"),
+                           edate = as.Date("19950515", format = "%Y%m%d"),
+                           stateFIPS = statecodes48)
+
+#Verifies that the function worked
+allstateCO1995$state
+
 
 temp = aqs_monitors_by_state(parameter="42101",
                       bdate=as.Date("20170101",
