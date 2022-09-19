@@ -1,79 +1,68 @@
 library(RAQSAPI)
-library(sys)
 
 #aqs_sign_up(email = "mhdz@tamu.edu")
 
 aqs_credentials(username = "mhdz@tamu.edu", key = "berrywolf85")
 
-statecodes = aqs_states()[1:51,][c(-2, -9, -12),]
+states = aqs_states()[1:51,][c(-2, -9, -12),]
+stateFIPS = states$stateFIPS
 
-params = c(
-  "14129", #Lead
+cur_params = c(
+# "14129", #Lead
   "42101", #Carbon Monoxide
   "42401", #Sulfur Dioxide
-  "42602"  #Nitrogen Dioxide
-  #"????", #PM10
-  #"????"  #PM2.5
+  "42602", #Nitrogen Dioxide
+  "44201", #Ozone
+  "81102", #PM10
+  "85101", #PM10
+  "88101", #PM2.5
+  "88502"  #PM2.5
 )
+
+printf <- function(fmt, ...)
+{
+  print(sprintf(fmt, ...))
+}
 
 get_date <- function(year, month = 1, day = 1)
 {
   as.Date(sprintf("%i-%i-%i", month, day, year), "%m-%d-%Y")
 }
 
-query_year_toxic <- function(param, state, year)
+query_year <- function(params, states, year)
 {
-  bdate = get_date(year,  1,  1)
-  edate = get_date(year, 12, 31)
+  date = get_date(year)
   
-  aqs_annualsummary_by_state(param, bdate, edate, state)
+  aqs_annualsummary_by_state(params, date, date, states)
 }
 
-query_years_toxic <- function(param, state, years)
-{
-  data = NULL
-  for (year in years) {
-    data = rbind(data, query_year_toxic(param, state, year))
-  }
-  return(data)
-}
+#query_years_toxic <- function(param, state, years)
+#{
+#  data = NULL
+#  for (year in years) {
+#    data = rbind(data, query_year_toxic(param, state, year))
+#  }
+#  return(data)
+#}
 
-get_cache_name <- function(param, state)
+get_cache_name_old <- function(param, state)
 {
   sprintf("datasets/%s-%s.RData", state, param)
 }
 
-cache_data <- function(param, state, years = 1980:2019)
+get_cache_name <- function(year)
 {
-  file = get_cache_name(param, state)
-  data = query_years_toxic(param, state, years)
-  
-  saveRDS(data, file)
+  sprintf("datasets/%i.dat", year)
 }
 
-cache_all_data <- function(param, years = 1980:2019)
+cache_year <- function(year, params, states)
 {
-  print("Beginning cache, this will take some time...")
-  for (state in statecodes$stateFIPS)
-  {
-    cache_data(cur_param, state)
-  }
-  print("Caching finished.")
+  saveRDS(query_year(params, states, year), get_cache_name(year))
 }
 
-load_cached_data <- function(param, state)
+for (year in 1980:2019)
 {
-  readRDS(get_cache_name(param, state))
+  cache_year(year, cur_params, stateFIPS)
+  printf("year %i data cached", year)
 }
-
-# PLEASE RUN THE FUNCTION BELOW TO DOWNLOAD AND CACHE THE DATA. 
-# EACH FILE IS FOR ONE STATE, ONE PARAMETER, FROM 1980 TO 2019. 
-# FILES ARE SAVED AS '.RData' BUT WILL SEEM CORRUPTED WHEN THEY ARE NOT.
-# EACH FUNCTION CALL WILL TAKE A VERY LONG TIME 
-
-#EX:
-#cache_all_data(param$CO)
-#         OR
-#cache_all_data("42401")
-
 
