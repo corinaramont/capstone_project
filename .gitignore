@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+
+old_datasets/
+Testing/mayra/CombineData.R
