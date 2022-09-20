@@ -95,6 +95,87 @@ year = year + 10000
 }
 
 
+######################################
+########## 2003-2020 API CALLS########
+######################################
+
+#loops to call the api to get the data for all pollutants for all states for a single year
+#initializing at year 1980
+year = 20030515
+
+#18 loops gets us up to year 2020
+for (i in 0:17) {
+  
+  #creates the variable names for each year of data 
+  nam = paste("pollutantdata",substr(year,1,4),sep="" )  
+  
+  #gives each new variable created the value of the pollutant data for that year
+  assign(nam, aqs_annualsummary_by_state(parameter = pollutatntcodes,
+                                         bdate = as.Date(paste(year), format="%Y%m%d"),
+                                         edate = as.Date(paste(year), format = "%Y%m%d"),
+                                         stateFIPS = statecodes48))
+  
+  #temp var that gives the name for the file to be saved
+  temp = paste("pollutantdata",substr(year,1,4),".rds",sep="" )
+  
+  #saves the data so that we dont have to rely on the api calls 
+  saveRDS(nam, temp)
+  
+  #chekcs to make sure that the loops is working
+  print(nam)
+  #this makes it so that we loop by a single year 
+  year = year + 10000
+}
+#forgive me for this 
+saveRDS(pollutantdata1980, "pollutantdata1980.rds")
+saveRDS(pollutantdata1981, "pollutantdata1981.rds")
+saveRDS(pollutantdata1982, "pollutantdata1982.rds")
+saveRDS(pollutantdata1983, "pollutantdata1983.rds")
+saveRDS(pollutantdata1984, "pollutantdata1984.rds")
+saveRDS(pollutantdata1985, "pollutantdata1985.rds")
+saveRDS(pollutantdata1986, "pollutantdata1986.rds")
+saveRDS(pollutantdata1987, "pollutantdata1987.rds")
+saveRDS(pollutantdata1988, "pollutantdata1988.rds")
+saveRDS(pollutantdata1989, "pollutantdata1989.rds")
+
+saveRDS(pollutantdata1990, "pollutantdata1990.rds")
+saveRDS(pollutantdata1991, "pollutantdata1991.rds")
+saveRDS(pollutantdata1992, "pollutantdata1992.rds")
+saveRDS(pollutantdata1993, "pollutantdata1993.rds")
+saveRDS(pollutantdata1994, "pollutantdata1994.rds")
+saveRDS(pollutantdata1995, "pollutantdata1995.rds")
+saveRDS(pollutantdata1996, "pollutantdata1996.rds")
+saveRDS(pollutantdata1997, "pollutantdata1997.rds")
+saveRDS(pollutantdata1998, "pollutantdata1998.rds")
+saveRDS(pollutantdata1999, "pollutantdata1999.rds")
+
+saveRDS(pollutantdata2000, "pollutantdata2000.rds")
+saveRDS(pollutantdata2001, "pollutantdata2001.rds")
+saveRDS(pollutantdata2002, "pollutantdata2002.rds")
+saveRDS(pollutantdata2003, "pollutantdata2003.rds")
+saveRDS(pollutantdata2004, "pollutantdata2004.rds")
+saveRDS(pollutantdata2005, "pollutantdata2005.rds")
+saveRDS(pollutantdata2006, "pollutantdata2006.rds")
+saveRDS(pollutantdata2007, "pollutantdata2007.rds")
+saveRDS(pollutantdata2008, "pollutantdata2008.rds")
+saveRDS(pollutantdata2009, "pollutantdata2009.rds")
+
+saveRDS(pollutantdata2010, "pollutantdata2010.rds")
+saveRDS(pollutantdata2011, "pollutantdata2011.rds")
+saveRDS(pollutantdata2012, "pollutantdata2012.rds")
+saveRDS(pollutantdata2013, "pollutantdata2013.rds")
+saveRDS(pollutantdata2014, "pollutantdata2014.rds")
+saveRDS(pollutantdata2015, "pollutantdata2015.rds")
+saveRDS(pollutantdata2016, "pollutantdata2016.rds")
+saveRDS(pollutantdata2017, "pollutantdata2017.rds")
+saveRDS(pollutantdata2018, "pollutantdata2018.rds")
+saveRDS(pollutantdata2019, "pollutantdata2019.rds")
+
+saveRDS(pollutantdata2020, "pollutantdata2020.rds")
+
+
+
+
 
 pollutantdata1980$parameter
 
