@@ -133,7 +133,8 @@ print(divisions_graph)
 #boxplot for life expectancies by division
 divisions_box = ggplot(data=divisions_life_expect, aes(x=Division, y=avg_by_year, group=Division)) + 
   geom_boxplot(aes(fill=Division)) +
-  ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancy (Years)")
+  ggtitle("US Divisions Life Expectancies 1959-2019") + ylab("Life Expectancy (Years)") +
+  theme(axis.text.x = element_text(size = 5.4)) 
 print(divisions_box)
 
 ##################### TESTING FOR STUFF ##############################################
