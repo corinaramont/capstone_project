@@ -4,7 +4,7 @@ library(tidyverse)
 library(ggplot2)
 library("gridExtra")                        # Load gridExtra package
 
-
+#loads data
 load_data <- function() { readRDS("datasets/all_data.dat") }
 
 all_data = load_data()
@@ -102,5 +102,11 @@ for(i in 1:length(unique(pollutantsbyyearandstate$parameter))){
   geom_line(aes(x = year, y = annualmean, group = state, color = division)) +
   ylab("Annual mean measurement") + ggtitle(unique(pollutantsbyyearandstate$parameter)[i]))
 }
+
+cleaned = all_data %>% group_by(year,state_code,parameter_code)
+
+
+
+
 
 
