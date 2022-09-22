@@ -36,7 +36,9 @@ multipliers = mapply(normalizer, all_data$parameter, all_data$units_of_measure, 
 # normalizes means using multipliers
 standardized_means = all_data$arithmetic_mean * multipliers
 
+ttemp = all_data %>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")
 
+unique(ttemp$units_of_measure)
 
 sum(is.na(all_data$arithmetic_mean))
 
@@ -69,11 +71,16 @@ west = df%>%filter(state_code %in% west_codes)
 westPM25 = west%>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)%>%
   summarise(annualmean=mean(arithmetic_mean))%>%mutate(Region="West")
 
+ttemp=west%>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)
+
+
 pm25annualmeanbyregion = rbind(northeastPM25,midwestPM25, southPM25, westPM25)
 
 ggplot(data = pm25annualmeanbyregion, aes(x = year, y = annualmean, group = Region)) +
   geom_line(aes(color = Region)) + 
   ylab("Annual Average PM2.5 measurements")
+
+
 
 
 ggplot(pm25) +
