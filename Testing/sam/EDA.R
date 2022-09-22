@@ -38,17 +38,13 @@ multipliers = mapply(normalizer, all_data$parameter, all_data$units_of_measure, 
 # normalizes means using multipliers
 standardized_means = all_data$arithmetic_mean * multipliers
 
-ttemp = all_data %>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")
 
-unique(ttemp$units_of_measure)
-
+#Checks missing measurements
 sum(is.na(all_data$arithmetic_mean))
 
 df <- data.frame(cbind(all_data%>%select(state, state_code, county_code, site_number, parameter_code, 
                                          parameter, year, standard_deviation, first_max_value, 
                                          second_max_value, arithmetic_mean), standardized_means))
-
-pm25 = df %>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass") %>% group_by(state, parameter, year) %>% summarise(annualmean = mean(arithmetic_mean))
 
 #regions by state codes
 newengland_codes = c("09","23","25","33","44","50")
@@ -61,6 +57,8 @@ westsouthcentral_codes = c('05','22','40','48')
 mountain_codes = c('04','08','16','30','32','35','49','56')
 pacific_codes = c('02','06','15','41','53')
 
+
+#This starts the process of adding a division column to all_data
 temp1 = all_data %>%filter(state_code %in% newengland_codes) %>% mutate(division = "New England")
 temp2 = all_data %>%filter(state_code %in% middleatlantic_codes) %>% mutate(division = "Middle Atlantic")
 temp3 = all_data %>%filter(state_code %in% northeastcentral_codes) %>% mutate(division = "East North Central")
@@ -82,70 +80,27 @@ all_data = rbind(temp1,
       temp8,
       temp9)
 
-sum(is.na(all_data$arithmetic_mean))
 
-
-
+#Aggregates the data by year, state, and parameter and gives the annual mean
 pollutantsbyyearandstate = all_data  %>% group_by(year, state, parameter, division) %>%
   summarise(annualmean = mean(arithmetic_mean))
 
+
+# plots only the Carbon Monoxide annual measurements over time
+# Plots all 50 states as seperate lines, but colors them by division for 
+# easier reading
 ggplot(pollutantsbyyearandstate %>% filter(parameter == "Carbon monoxide")) +
   geom_line(aes(x = year, y = annualmean, group = state, color = division)) +
   ylab("Annual mean measurement") + 
   ggtitle("Particlate Matter 2.5 micrometers and smaller")
 
-ggplot(pollutantsbyyearandstate %>% filter(parameter == "Carbon monoxide")) +
+
+#This plots all All the parameter of interest over time similar to the plot above
+for(i in 1:length(unique(pollutantsbyyearandstate$parameter))){
+  print(i)
+  print(ggplot(pollutantsbyyearandstate %>% filter(parameter == unique(pollutantsbyyearandstate$parameter)[i])) +
   geom_line(aes(x = year, y = annualmean, group = state, color = division)) +
-  ylab("Annual mean measurement") + 
-  ggtitle("Annual Average Carbon Monoxide Measurements per Division")
-
-
-par(mfrow = c(2,4))
-
-for(i in unique(pollutantsbyyearandstate$parameter)){
-  
-
-  print(ggplot(pollutantsbyyearandstate %>% filter(parameter == i)) +
-  geom_line(aes(x = year, y = annualmean, group = state, color = division)) +
-  ylab("Annual mean measurement") + ggtitle(i))
+  ylab("Annual mean measurement") + ggtitle(unique(pollutantsbyyearandstate$parameter)[i]))
 }
-
-
-
-
-
-northeast = df%>%filter(state_code %in% northeast_codes)
-northeastPM25 = northeast %>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)%>%
-  summarise(annualmean=mean(arithmetic_mean))%>%mutate(Region="Northeast")
-
-
-
-midwest = df%>%filter(state_code %in% midwest_codes)
-midwestPM25 = midwest%>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)%>%
-  summarise(annualmean=mean(arithmetic_mean))%>%mutate(Region="Midwest")
-
-south = df%>%filter(state_code %in% south_codes)
-southPM25 = south%>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)%>%
-  summarise(annualmean=mean(arithmetic_mean))%>%mutate(Region="South")
-
-west = df%>%filter(state_code %in% west_codes)
-westPM25 = west%>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)%>%
-  summarise(annualmean=mean(arithmetic_mean))%>%mutate(Region="West")
-
-ttemp=west%>% filter(parameter == "Acceptable PM2.5 AQI & Speciation Mass")%>%group_by(year)
-
-
-pm25annualmeanbyregion = rbind(northeastPM25,midwestPM25, southPM25, westPM25)
-
-ggplot(data = pm25annualmeanbyregion, aes(x = year, y = annualmean, group = Region)) +
-  geom_line(aes(color = Region)) + 
-  ylab("Annual Average PM2.5 measurements")
-
-
-
-
-ggplot(pm25) +
-  geom_line(aes(x = year, y = annualmean, color = state)) +
-  ylab("Acceptable PM2.5 AQI & Speciation Mass")
 
 
