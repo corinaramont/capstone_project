@@ -4,10 +4,14 @@ library(tibble)
 library(stringr)
 
 #reading in life expectancy data
-life1 = read.csv("~/capstone_project/datasets/life-expectancy-1959-1978.csv")
-life2 = read.csv("~/capstone_project/datasets/life-expectancy-1979-1998.csv")
-life3 = read.csv("~/capstone_project/datasets/life-expectancy-1999-2016.csv")
-life4 = read.csv("~/capstone_project/datasets/cdc-life-expectancy-2018-2020.csv")
+
+# gets full path name from subpath for anyone 
+make_path <- function(subpath) { sprintf("%s/%s", getwd(), subpath) }
+
+life1 = read.csv(make_path("datasets/life-expectancy-1959-1978.csv"))
+life2 = read.csv(make_path("datasets/life-expectancy-1979-1998.csv"))
+life3 = read.csv(make_path("datasets/life-expectancy-1999-2016.csv"))
+life4 = read.csv(make_path("datasets/cdc-life-expectancy-2018-2020.csv"))
 
 life4 = life4[,-4]
 life4 = life4 %>% pivot_wider(names_from = YEAR, 
