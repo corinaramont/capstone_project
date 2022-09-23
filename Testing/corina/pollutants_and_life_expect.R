@@ -1,11 +1,10 @@
-
 library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library("gridExtra")                        # Load gridExtra package
 
 #loads data
-load_data <- function() { readRDS("datasets/all_data.dat") }
+load_data <- function() { readRDS("~/Documents/fall 2022/all_data.dat") }
 
 all_data = load_data()
 
@@ -73,14 +72,14 @@ temp9 = all_data %>%filter(state_code %in% pacific_codes) %>% mutate(division = 
 
 #now we have the divisions in the data
 all_data = rbind(temp1,
-      temp2,
-      temp3,
-      temp4,
-      temp5,
-      temp6,
-      temp7,
-      temp8,
-      temp9)
+                 temp2,
+                 temp3,
+                 temp4,
+                 temp5,
+                 temp6,
+                 temp7,
+                 temp8,
+                 temp9)
 
 
 #Aggregates the data by year, state, and parameter and gives the annual mean
@@ -101,14 +100,14 @@ ggplot(pollutantsbyyearandstate %>% filter(parameter == "Carbon monoxide")) +
 for(i in 1:length(unique(pollutantsbyyearandstate$parameter))){
   print(i)
   print(ggplot(pollutantsbyyearandstate %>% filter(parameter == unique(pollutantsbyyearandstate$parameter)[i])) +
-  geom_line(aes(x = year, y = annualmean, group = state, color = division)) +
-  ylab("Annual mean measurement") + ggtitle(unique(pollutantsbyyearandstate$parameter)[i]))
+          geom_line(aes(x = year, y = annualmean, group = state, color = division)) +
+          ylab("Annual mean measurement") + ggtitle(unique(pollutantsbyyearandstate$parameter)[i]))
 }
 
 cleaned = all_data %>% group_by(year,state_code,parameter_code)
 
 ######corina######
-load("C:/Users/Jarvis/capstone_project/datasets/life_expectancies_1959_2019.Rda")
+load("~/capstone_project/datasets/life_expectancies_1959_2019.Rda")
 clean_life_expect = life_expect%>%filter(!Year %in% c(1959:1979))
 
 #create new column
@@ -149,13 +148,21 @@ for(i in 1:39){
   
 }
 
-save(cleaned_pollutants_data, file = "/capstone_project/datasets/cleaned_pollutant_data.dat")
+#save(cleaned_pollutants_data, file = "/capstone_project/datasets/cleaned_pollutant_data.dat")
 
 
+cleaned_pollutants_data$lifeexpect = ifelse(cleaned_pollutants_data$lifeexpect==0, NA, cleaned_pollutants_data$lifeexpect)
+  
 for(i in 1:length(unique(cleaned_pollutants_data$parameter))){
   print(i)
   print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[i])) +
           geom_line(aes(x = lifeexpect, y = annualmean, group = state, color = division)) +
           ylab("Annual mean measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[i]))
 }
+
+#carbon monoxide
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[1])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + ggtitle(unique(cleaned_pollutants_data$parameter)[1]))
+
 
