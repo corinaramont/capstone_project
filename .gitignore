@@ -1,10 +1,7 @@
-*.Rproj.user
-*.Rhistory
-*.RData
-*.Ruserdata
-
-*.bat
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
 
 old_datasets/
 Testing/mayra/CombineData.R
-.Rproj.user
