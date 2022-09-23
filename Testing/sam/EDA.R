@@ -107,7 +107,44 @@ for(i in 1:length(unique(pollutantsbyyearandstate$parameter))){
 
 cleaned = all_data %>% group_by(year,state_code,parameter_code)
 
+######corina######
+load("C:/Users/Jarvis/capstone_project/datasets/life_expectancies_1959_2019.Rda")
+clean_life_expect = life_expect%>%filter(!Year %in% c(1959:1979))
 
+#create new column
+cleaned_pollutants_data = pollutantsbyyearandstate
+life_expect1 = data.frame(lifeexpect = rep(0, nrow(cleaned_pollutants_data)))
+cleaned_pollutants_data = cbind(cleaned_pollutants_data, life_expect1)
+
+#variables
+years = c(1980:2016, 2018, 2019)
+statenames = state.name[c(-2,-11)]
+stateabb = state.abb[c(-2,-11)]
+
+#clean up
+for(i in 1:39){
+  
+  for(j in 1:48){
+    
+    life_expect_value = (clean_life_expect%>%
+                           filter(State == state.abb[j] & Year == years[i]))$Life_Expectancies
+    
+    index_values = which(cleaned_pollutants_data$year == years[i] & cleaned_pollutants_data$state == statenames[j])
+    
+    if(length(index_values) == integer(0)){
+      
+      next
+      
+    }else{
+      for(k in 1:length(index_values)){
+        
+        cleaned_pollutants_data[index_values[k],]$lifeexpect = life_expect_value
+        
+      }
+    }
+  }  
+  
+}
 
 
 
