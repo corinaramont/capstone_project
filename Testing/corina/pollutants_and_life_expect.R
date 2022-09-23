@@ -165,35 +165,54 @@ print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_poll
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[1]))
 
+#mountain (idaho, utah) & new england (new hampshire) have high stuff in 1980s
+cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[1] & annualmean > 2.5)
 
 #nitrogen dioxide
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[2])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[2]))
 
+#nevada has annualmean over 50 in 1980s
+cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[2] & annualmean > 50)
+
 #Ozone
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[3])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[3]))
+
+#new england (connecticut), south atlantic (Delaware), Mountain (Utah), east south central (tennessee)
+cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[3] & annualmean > 0.06)
 
 #sulfur dioxide
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[4])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[4]))
 
+#mountain (arizona & wyoming)
+cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[4] & annualmean > 40)
+
+#PM10 STP
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[5])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[5]))
 
+#PM2.5 AQI
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[6])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[6]))
 
+#PM10 LC
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[7])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[7]))
 
+#PM2.5 LC
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[8])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
         ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[8]))
 
+#remove California PM2.5 high
+pm2.5LC = cleaned_pollutants_data%>%filter(parameter == unique(cleaned_pollutants_data$parameter)[8] & annualmean < 43)
+print(ggplot(data = pm2.5LC, aes(x = annualmean, y = lifeexpect, 
+                                 group = state, color = division)) + geom_line())
