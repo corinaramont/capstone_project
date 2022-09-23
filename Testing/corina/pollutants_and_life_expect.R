@@ -163,6 +163,37 @@ for(i in 1:length(unique(cleaned_pollutants_data$parameter))){
 #carbon monoxide
 print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[1])) +
         geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
-        ylab("Life Expectancy") + ggtitle(unique(cleaned_pollutants_data$parameter)[1]))
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[1]))
 
+
+#nitrogen dioxide
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[2])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[2]))
+
+#Ozone
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[3])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[3]))
+
+#sulfur dioxide
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[4])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[4]))
+
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[5])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[5]))
+
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[6])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[6]))
+
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[7])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[7]))
+
+print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[8])) +
+        geom_line(aes(x = annualmean, y = lifeexpect, group = state, color = division)) +
+        ylab("Life Expectancy") + xlab("Annual Mean Measurement") + ggtitle(unique(cleaned_pollutants_data$parameter)[8]))
 
