@@ -120,22 +120,25 @@ cleaned_pollutants_data = cbind(cleaned_pollutants_data, life_expect1)
 years = c(1980:2016, 2018, 2019)
 statenames = state.name[c(-2,-11)]
 stateabb = state.abb[c(-2,-11)]
+life_expect_value = 0
 
 #clean up
 for(i in 1:39){
   
   for(j in 1:48){
+    cat(i,j)
     
     life_expect_value = (clean_life_expect%>%
-                           filter(State == state.abb[j] & Year == years[i]))$Life_Expectancies
+                           filter(State == stateabb[j] & Year == years[i]))$Life_Expectancies
     
     index_values = which(cleaned_pollutants_data$year == years[i] & cleaned_pollutants_data$state == statenames[j])
     
-    if(length(index_values) == integer(0)){
+    if(length(index_values) == 0){
       
       next
       
     }else{
+      
       for(k in 1:length(index_values)){
         
         cleaned_pollutants_data[index_values[k],]$lifeexpect = life_expect_value
@@ -145,6 +148,8 @@ for(i in 1:39){
   }  
   
 }
+
+save(cleaned_pollutants_data, file = "/capstone_project/datasets/cleaned_pollutant_data.dat")
 
 
 
