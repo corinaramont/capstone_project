@@ -4,71 +4,19 @@ library(ggplot2)
 
 ##############################FUNCTIONS START###################################
 
-printf <- function(fmt, ...) { print(sprintf(fmt, ...)) }
 
 
-normalizer <- function(parameter, units)
-{
-  if (units == "Parts per million")
-  {
-    return(1000)
-  }
-  if (units == "Micrograms/cubic meter (LC)")
-  {
-    return(0)
-    stop("No scaling for micrograms!")
-  }
-  return(1)
-}
 
 
-get_abrv <- function(state_code)
-{
-  state_info[state_info$FIPS == state_code,]$abrv
-}
-
-get_region <- function(state_code)
-{
-  state_info[state_info$FIPS == state_code,]$region
-}
-
-
-bind_data <- function(data){
-  cbind(data,
-        abrv   = transmute(data$state_code, get_abrv),
-        region = transmute(data$state_code, get_region)
-  )
-}
 
 
 summarise_region <- function(data, region){
   (data %>% filter(state_code %in% region) %>% summarise(avg = mean(stand_mean_avg)))$avg
 }
 
-
-summarise_regions <- function(data){
-  cbind(
-    data$year,
-    summarise_region(data, regions$northeast),
-    summarise_region(data, regions$midwest),
-    summarise_region(data, regions$south),
-    summarise_region(data, regions$west)
-  )
-}
+summarise_regions <- function(data) {} # TODO
 
 #######################################FUNCTIONS END############################
-
-state_info = readRDS("datasets/state_info.dat")
-
-bound_data = bind_data(all_data)
-
-expand.data <- function(data, ...)
-{
-  grid <- expand.grid(sapply(list(...), unique))
-  merge(data, grid, all = T)
-}
-
-vals <- expand.data(CO_regions, CO_regions$year, CO_regions$abrv)
 
 CO_regions = bind_data(CO)
 CO_regions_plot <- CO_regions%>%group_by(year, region)%>%summarise(means = mean(stand_mean_avg))
