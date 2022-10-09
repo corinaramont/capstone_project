@@ -148,11 +148,11 @@ for(i in 1:39){
   
 }
 
-#save(cleaned_pollutants_data, file = "/capstone_project/datasets/cleaned_pollutant_data.dat")
-
-
 cleaned_pollutants_data$lifeexpect = ifelse(cleaned_pollutants_data$lifeexpect==0, NA, cleaned_pollutants_data$lifeexpect)
-  
+save(cleaned_pollutants_data, file = "/capstone_project/datasets/cleaned_pollutant_data.dat")
+
+save(cleaned_pollutants_data, file="clean_pollutant_life_data.Rda")
+
 for(i in 1:length(unique(cleaned_pollutants_data$parameter))){
   print(i)
   print(ggplot(cleaned_pollutants_data %>% filter(parameter == unique(cleaned_pollutants_data$parameter)[i])) +
