@@ -3,9 +3,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-setwd("~/capstone_project/datasets")
-load("clean_pollutant_life_data.Rda")
-load("~/capstone_project/datasets/life_expectancies_1959_2019.Rda")
+cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
+life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
 
 #function to filter annualmeans by years, state name, param
 pollcol = function(years, states, param){
