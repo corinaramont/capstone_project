@@ -3,8 +3,11 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
-life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
+#cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
+#life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
+
+cleaned_pollutants_data = readRDS("/Users/corinaramont/Documents/cleaned_pollutant_data.dat")
+life_expect = readRDS("/Users/corinaramont/Documents/life_expectancies_1959_2019.dat")
 
 #function to filter annualmeans by years, state name, param
 pollcol = function(years, states, param){
@@ -28,7 +31,7 @@ pollcol = function(years, states, param){
 #getting big dataframe
 X = c()
 Y = c()
-for(i in c(1:2)){
+for(i in c(1:48)){
   print(i)
   state_name = unique(cleaned_pollutants_data$state)[i]
   state_abb = unique(life_expect$State)[i]
@@ -49,6 +52,10 @@ for(i in c(1:2)){
 }
 
 
-colnames(X) = c("CO", "NO2", "Ozone", "SO2", "PM10", "PM2.5", "LifeExpect")
+colnames(Y) = c("state", "Year","CO", "NO2", "Ozone", "SO2", "PM10", "PM2.5", "LifeExpect")
+Y = as.data.frame(Y)
 
-out = lm(LifeExpect ~ . ,data=as.data.frame(X))
+for(i in 2:9){
+  Y[,i] = as.double(Y[,i])
+}
+save(Y,file = "/Users/corinaramont/capstone_project/datasets/scrub_daddied_dataset.Rda")
