@@ -25,14 +25,19 @@ pollcol = function(years, states, param){
   return(annualmeans_by_state)
 }
 
-pollcol(2000:2019, "Alabama", param = "Nitrogen dioxide (NO2)")
-
-
+#getting big dataframe
 X = c()
-for (i in c(1:5,8)) {
-  param = unique(cleaned_pollutants_data$parameter)[i]
+Y = c()
+for(i in c(1:2)){
   print(i)
-  X = cbind(X, pollcol(2000:2019, "Alabama", param = param))
+  state_name = unique(cleaned_pollutants_data$state)[i]
+  for (j in c(1:5,8)) {
+    param = unique(cleaned_pollutants_data$parameter)[j]
+    #print(j)
+    X = cbind(X, pollcol(2000:2019, state_name, param = param))
+  }
+  Y = rbind(Y, X)
+  X=c()
 }
 
 life_expect_states = (life_expect %>% filter(Year %in% (2000:2019), State=="AL"))$Life_Expectancies
