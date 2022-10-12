@@ -31,18 +31,24 @@ Y = c()
 for(i in c(1:2)){
   print(i)
   state_name = unique(cleaned_pollutants_data$state)[i]
+  state_abb = unique(life_expect$State)[i]
+  X = c(rep(state_name, 20))
+  X = cbind(X, c(2000:2019))
   for (j in c(1:5,8)) {
     param = unique(cleaned_pollutants_data$parameter)[j]
     #print(j)
     X = cbind(X, pollcol(2000:2019, state_name, param = param))
   }
+  life_expect_states = (life_expect %>% 
+                          filter(Year %in% (2000:2019), State==state_abb))$Life_Expectancies
+  life_expect_states1 = c(life_expect_states[1:17], NA, life_expect_states[18:19])
+  X = cbind(X, life_expect_states1)
+  
   Y = rbind(Y, X)
   X=c()
 }
 
-life_expect_states = (life_expect %>% filter(Year %in% (2000:2019), State=="AL"))$Life_Expectancies
-life_expect_states1 = c(life_expect_states[1:17], NA, life_expect_states[18:19])
-X = cbind(X, life_expect_states1)
+
 colnames(X) = c("CO", "NO2", "Ozone", "SO2", "PM10", "PM2.5", "LifeExpect")
 
 out = lm(LifeExpect ~ . ,data=as.data.frame(X))
