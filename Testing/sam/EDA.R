@@ -149,7 +149,33 @@ for(i in 1:39){
   
 }
 
-save(cleaned_pollutants_data, file = "/capstone_project/datasets/cleaned_pollutant_data.dat")
+saveRDS(cleaned_pollutants_data, file = "cleaned_pollutant_data.dat")
+
+
+
+for(i in unique(cleaned_pollutants_data$parameter)){
+  temp = cleaned_pollutants_data %>% filter(parameter == i)
+  print(" ")
+  cat(dim(temp)[1])
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 for(i in 1:length(unique(cleaned_pollutants_data$parameter))){
