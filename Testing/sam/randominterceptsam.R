@@ -2,42 +2,85 @@ library(lme4)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(HRW)
+library(mgcv)
+library(multilevel)
+library(buildmer)
+library(splines)
+library(lmerTest)
 
-cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
-life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
+load("datasets/scrub_daddied_dataset.Rda")
 
-#function to filter annualmeans by years, state name, param
-pollcol = function(years, states, param){
-  annualmeans_by_state=c()
+######### Attempting to use MGCV to do the random intercepts
+colnames(Y)
+
+length(unique(Y$state))
+p = 2
+paste0("as.integer(state== unique(state)[",1:p,"])",collapse="+")
+
+fitlinear = gamm(LifeExpect ~ Year + 
+                   paste0("as.integer(state== unique(state)[",1:p,"])",collapse="+"), 
+                 random = list(state = ~1), data = Y)
+summary(fitlinear$gam)
+
+year = Y$Year[Y$state == "Alabama"][-18]
+lifeexpect = (fitlinear$gam$fitted.values)[1:19]
+fitlinear$gam$fitted.values[seq(from = 1, to = 500, by = 19)]
+
+plot(year, lifeexpect)
+
+
+addline = function(state, col){
+  year = Y$Year[Y$state == state]
+  lifeexpect1 = fitlinear$gam$fitted.values[Y$state == state]
+  points(year, lifeexpect1, col = col)
+}
+plot(fitlinear$gam$fitted.values, fitlinear$gam$residuals)
+
+fitlinear$gam$fitted.values[1:20]
+
+plot(year, lifeexpect)
+addline("Arizona", 3)
+addline("Arkansas", 2)
+
+
+for (i in 1:10) {
+  addline(unique(Y$state)[i], col = i)
   
-  for (i in c(years)) {
-    temp = cleaned_pollutants_data %>% 
-      filter(year == i, state==states, parameter == param)
-    if(nrow(temp) == 0){
-      #adds NA value if particular year does not have data
-      annualmeans_by_state = c(annualmeans_by_state, NA)
-    }else{
-      annualmeans_by_state = c(annualmeans_by_state, temp$annualmean)
-    } 
-  }
-  
-  #returns vector of annualmeans by state, year, parameter
-  return(annualmeans_by_state)
 }
 
-pollcol(2000:2019, "Alabama", param = "Nitrogen dioxide (NO2)")
 
 
-X = c()
-for (i in c(1:5,8)) {
-  param = unique(cleaned_pollutants_data$parameter)[i]
-  print(i)
-  X = cbind(X, pollcol(2000:2019, "Alabama", param = param))
-}
+#Using lme4 with splines
 
-life_expect_states = (life_expect %>% filter(Year %in% (2000:2019), State=="AL"))$Life_Expectancies
-life_expect_states1 = c(life_expect_states[1:17], NA, life_expect_states[18:19])
-X = cbind(X, life_expect_states1)
-colnames(X) = c("CO", "NO2", "Ozone", "SO2", "PM10", "PM2.5", "LifeExpect")
+#Original Model
+fit <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + (1|state), verbose = T, data = Y)
+plot(residuals(fit), fitted(fit))
+plot(fit)
+qqnorm(resid(fit)); qqline(resid(fit)) #not quite as normal 
+hist(resid(fit))                       #slightly skewed to the left 
+summary(fit)
+ICC1(aov.1); ICC2(aov.1)
 
-out = lm(LifeExpect ~ . ,data=as.data.frame(X))
+#Added the spline fit
+splinefit <- lmer(LifeExpect ~ bs(CO) + bs(NO2) + bs(Ozone) + bs(SO2) + bs(PM10) + bs(PM2.5) + (1|state), verbose = T, data = Y)
+plot(residuals(splinefit), fitted(splinefit))
+plot(splinefit)
+qqnorm(resid(splinefit)); qqline(resid(splinefit)) # Maybe a bit better than fit
+
+#Quadratic term for year
+fityearquad <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + I(Year^2) + (1|state), verbose = T, data = Y)
+summary(fityearquad)
+qqnorm(resid(fityearquad)); qqline(resid(fityearquad))
+#I think the quad term for year is pretty good
+
+
+
+
+
+
+
+
+
+
+
