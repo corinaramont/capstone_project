@@ -1,6 +1,13 @@
 
 get_data_file <- function(name) { sprintf("datasets/%s.dat", name) }
 
+loadRda <- function(file)
+{
+  env = new.env()
+  load(file, env)
+  env
+}
+
 save_data <- function(data, name) { saveRDS(data, get_data_file(name)) }
 load_data <- function(name)       { readRDS(      get_data_file(name)) }
 
