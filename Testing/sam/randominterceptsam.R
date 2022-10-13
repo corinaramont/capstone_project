@@ -8,7 +8,7 @@ library(multilevel)
 library(buildmer)
 library(splines)
 library(lmerTest)
-
+library(PerformanceAnalytics)
 load("datasets/scrub_daddied_dataset.Rda")
 
 ######### Attempting to use MGCV to do the random intercepts
@@ -18,8 +18,7 @@ length(unique(Y$state))
 p = 2
 paste0("as.integer(state== unique(state)[",1:p,"])",collapse="+")
 
-fitlinear = gamm(LifeExpect ~ Year + 
-                   paste0("as.integer(state== unique(state)[",1:p,"])",collapse="+"), 
+fitlinear = gamm(LifeExpect ~ Year, 
                  random = list(state = ~1), data = Y)
 summary(fitlinear$gam)
 
@@ -60,7 +59,16 @@ plot(fit)
 qqnorm(resid(fit)); qqline(resid(fit)) #not quite as normal 
 hist(resid(fit))                       #slightly skewed to the left 
 summary(fit)
+anova(fit)
 ICC1(aov.1); ICC2(aov.1)
+
+coefs = coef(fit)
+
+mean(coefs$state[,1])
+
+predict(fit, newdata = data.frame(CO = 0, NO2 = 0, Ozone = 0, SO2 = 0, 
+        PM10 = 0, PM2.5 = 0, Year = 0, state = "Alabama"))
+
 
 #Added the spline fit
 splinefit <- lmer(LifeExpect ~ bs(CO) + bs(NO2) + bs(Ozone) + bs(SO2) + bs(PM10) + bs(PM2.5) + (1|state), verbose = T, data = Y)
@@ -68,13 +76,29 @@ plot(residuals(splinefit), fitted(splinefit))
 plot(splinefit)
 qqnorm(resid(splinefit)); qqline(resid(splinefit)) # Maybe a bit better than fit
 
+summary(splinefit)
+anova(splinefit)
+
 #Quadratic term for year
-fityearquad <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + I(Year^2) + (1|state), verbose = T, data = Y)
+fityearquad <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2  + PM2.5 + Year + I(Year^2) + (1|state), verbose = T, data = Y)
 summary(fityearquad)
+anova(fityearquad)
 qqnorm(resid(fityearquad)); qqline(resid(fityearquad))
+
+BIC(fityearquad)
+BIC(fit)
+
 #I think the quad term for year is pretty good
 
+a = c(1,2,3)
+b = c(2,3,5)
 
+cor(Y$PM2.5, Y$PM10, use="complete.obs")
+cor(Y$CO, Y$NO2,use="complete.obs")
+
+cor(a,b)
+
+chart.Correlation(Y[,c(-1,-2)])
 
 
 
