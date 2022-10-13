@@ -100,3 +100,5 @@ ggplot(data = CO_regions_plot, aes(x = region, y = means)) +
 #looking at life exp and CO
 life1980 <- life_expect%>%filter(Year >= 1980)
 new_df <- cbind(life1980, CO_regions)
+
+SD
