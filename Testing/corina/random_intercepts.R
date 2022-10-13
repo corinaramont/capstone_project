@@ -64,11 +64,18 @@ save(Y,file = "/Users/corinaramont/capstone_project/datasets/scrub_daddied_datas
 ######################################################
 load("datasets/scrub_daddied_dataset.Rda")
 
-rand_int_out = lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
-    + Year + (1|state) ,data = Y)
-summary(rand_int_out)
-
+#normal linear regression
 lin_out = lm(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
                + Year ,data = Y)
 summary(lin_out)
 
+#random intercepts model
+rand_int_out = lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
+                    + Year + (1|state) ,data = Y)
+summary(rand_int_out)
+
+#check random intercepts model assumptions?
+plot(rand_int_out)
+
+qqnorm(resid(rand_int_out))
+qqline(resid(rand_int_out))
