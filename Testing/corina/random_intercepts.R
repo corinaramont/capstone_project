@@ -2,6 +2,7 @@ library(lme4)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(coefplot2)
 
 #cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
 #life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
@@ -59,3 +60,15 @@ for(i in 2:9){
   Y[,i] = as.double(Y[,i])
 }
 save(Y,file = "/Users/corinaramont/capstone_project/datasets/scrub_daddied_dataset.Rda")
+
+######################################################
+load("datasets/scrub_daddied_dataset.Rda")
+
+rand_int_out = lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
+    + Year + (1|state) ,data = Y)
+summary(rand_int_out)
+
+lin_out = lm(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
+               + Year ,data = Y)
+summary(lin_out)
+
