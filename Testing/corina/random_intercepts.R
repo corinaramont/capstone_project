@@ -101,6 +101,16 @@ summary(rand_int_out3)
 #w/o PM10 only and year^2
 rand_int_out4 = lmer(LifeExpect ~ CO + NO2 + Ozone + PM2.5 + SO2 
                      + (Year**2) + (1|state) ,data = Y_new)
+
+#w/o PM10 and SO2, log(LifeExpect)
+rand_int_out5 = lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 
+                     + Year + (1|state) ,data = Y_new)
+
+#w/o PM10 and SO2, log(LifeExpect), log(year)
+rand_int_out6 = lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 
+                     + log(Year) + (1|state) ,data = Y_new)
+
+
 #anova
 anova(rand_int_out, rand_int_out1, rand_int_out2, rand_int_out3,
-      rand_int_out4)
+      rand_int_out4, rand_int_out5, rand_int_out6)
