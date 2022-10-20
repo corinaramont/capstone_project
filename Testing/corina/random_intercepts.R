@@ -2,6 +2,7 @@ library(lme4)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(lmerTest)
 
 #cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
 #life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
@@ -110,7 +111,35 @@ rand_int_out5 = lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5
 rand_int_out6 = lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 
                      + log(Year) + (1|state) ,data = Y_new)
 
+#homogenity of variance
+plot(fitted(rand_int_out6),sqrt(resid(rand_int_out6)))
+gg_scalelocation(rand_int_out6, method = "loess", scale.factor = 1,
+                 se = FALSE)
+
+#
 
 #anova
 anova(rand_int_out, rand_int_out1, rand_int_out2, rand_int_out3,
       rand_int_out4, rand_int_out5, rand_int_out6)
+
+#######################################
+
+sam = lmer(LifeExpect ~ CO + NO2 + SO2 + PM10 + (1|state), verbose=T, data=Y_new)
+sam2 = lmer(log(LifeExpect) ~ CO + NO2 + PM2.5 + Year + (1|state), verbose=T, data=Y_new)
+may <- lmer(log(LifeExpect) ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new)
+corina = rand_int_out6
+win = lmer(LifeExpect ~ CO + NO2 + PM2.5 + log(Year) + (1|state), data = Y_new)
+summary(win)
+win2 = lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new)
+summary(win2)
+
+#asumptions
+plot(win2)
+qqnorm(resid(win2))
+qqline(resid(win2))
+
+anova(win, win2)
+
+#win2 is our final model!
+
+
