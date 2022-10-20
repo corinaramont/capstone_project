@@ -1,32 +1,62 @@
 library(lme4)
+library(lmerTest)
 library(multilevel)
 library(buildmer)
-#corina <- loadRda("datasets/scrub_daddied_dataset.Rda")
+library(glmmLasso)
 
-data <- corina$Y
-fit <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + (1|state), verbose = T, data = data)
-plot(residuals(fit), fitted(fit))
-plot(fit)
-qqnorm(resid(fit)); qqline(resid(fit)) #not quite as normal 
-hist(resid(fit))                       #slightly skewed to the left 
-aov.1 <- aov(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year, data = data)
-summary(aov.1)
-ICC1(aov.1); ICC2(aov.1)
+# buildmer2 <- function(x, data, ...)
+# {
+#   f = switch(as.character(class(x)), "formula" = x, formula(x))
+#   buildmer(f, data, buildmerControl = buildmerControl(formuler, data, ...))@model
+# }
+# 
+# buildmore <- function(model, data, crit)
+# {
+#   f = formula(model)
+#   list(forward  = buildmer2(f, data, direction = 'forward',  crit = crit),
+#        backward = buildmer2(f, data, direction = 'backward', crit = crit))
+# }
+
+loadRda <- function(file)
+{
+  env = new.env()
+  load(file, env)
+  env
+}
+corina <- loadRda("datasets/scrub_daddied_dataset.Rda")
+
+data <- na.exclude(corina$Y)
+full_linear_fit <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM2.5 + Year + (1|state), data = data)
+no_SO2_fit <- lmer(LifeExpect ~ CO + NO2 + Ozone + PM2.5 + Year + (1|state), data = data)
+anova(full_linear_fit, no_SO2_fit) #no_So2_fit is better 
+
+################################################################################################################################
+no_SO2_Ozone_fit <- lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = data)
+anova(no_SO2_Ozone_fit, no_SO2_fit) #no_SO2_Ozone_fit is better
 
 
-fit2 <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + (1|state) + (1|Year), data = data) #prob not a good model because fixed year doesn not add much to variance 
-plot(residuals(fit2), fitted(fit2))
-plot(fit2)
-qqnorm(resid(fit2)); qqline(resid(fit2)) #much more normal 
+#checking model assumptions
+plot(fitted(no_SO2_Ozone_fit), residuals(no_SO2_Ozone_fit)) #random, no pattern  
+#independence is not met since time relates with time 
+qqnorm(resid(no_SO2_Ozone_fit)); qqline(resid(no_SO2_Ozone_fit)) #not quite normal, the ends do not follow normal line 
+hist(resid(no_SO2_Ozone_fit)) #skewed to the left 
+################################################################################################################################
+ 
+log_lifeexpect <- lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 + Year + (1|state), data = data)
+anova(no_SO2_Ozone_fit, log_lifeexpect)
+plot(fitted(log_lifeexpect), residuals(log_lifeexpect)) #
+hist(resid(log_lifeexpect))
+qqnorm(resid(log_lifeexpect)); qqline(resid(log_lifeexpect))
 
 
 
-fit3 <- lmer(log(LifeExpect) ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + (1|state), data = data)
-plot(residuals(fit3), fitted(fit3))
-plot(fit3)
-qqnorm(resid(fit3)); qqline(resid(fit3)) #BIC = -5724.332
 
 
 
-fit4 <- lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), verbose = T, data = data)
-summary(fit4)
+
+
+
+
+
+
+
