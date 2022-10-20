@@ -1,6 +1,7 @@
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(lme4)
 
 #load dataset Y
 load("datasets/scrub_daddied_dataset.Rda")
@@ -45,7 +46,13 @@ points(Y_2000$CO, expect_2000, col="red",pch=4)
 legend(0.98,76,legend=c("Original", "Calculated"), cex=.9,
        col=c("black","red"),pch=c(1,4))
 
-#Y_2000_new = data.frame(CO.Level = Y_2000$CO, Actual.Life.Expect = )
+#compare differences in calculations vs original
+Y_2000_new = data.frame(State = Y_2000$state, 
+                        Actual.Life.Expect = Y_2000$LifeExpect,
+                        Calc.Life.Expect = expect_2000, 
+                        Prop.Life.Expect = round(((Y_2000$LifeExpect - expect_2000)/Y_2000$LifeExpect)*100,
+                        digits=4))
+
 
 #2011
 Y_2011 = Y_new%>%filter(Year==2011)
@@ -59,6 +66,11 @@ points(Y_2011$CO, expect_2011, col="red",pch=4)
 legend(0.12,76,legend=c("Original", "Calculated"), cex=.9,
        col=c("black","red"),pch=c(1,4))
 
+#compare differences in calculations vs original
+Y_2011_new = data.frame(State = Y_2011$state, Actual.Life.Expect = Y_2011$LifeExpect,
+                        Calc.Life.Expect = expect_2011,
+                        Prop.Life.Expect = round(((Y_2011$LifeExpect - expect_2011)/Y_2011$LifeExpect)*100,
+                                                 digits=4))
 
 #2019
 Y_2019 = Y_new%>%filter(Year==2019)
@@ -71,4 +83,10 @@ plot(Y_2019$CO, Y_2019$LifeExpect, xlab="CO Level",
 points(Y_2019$CO, expect_2019, col="red",pch=4)
 legend(0.12,76,legend=c("Original", "Calculated"), cex=.9,
        col=c("black","red"),pch=c(1,4))
+
+#compare differences in calculations vs original
+Y_2019_new = data.frame(State = Y_2019$state, Actual.Life.Expect = Y_2019$LifeExpect,
+                        Calc.Life.Expect = expect_2019,
+                        Prop.Life.Expect = round(((Y_2019$LifeExpect - expect_2019)/Y_2019$LifeExpect)*100,
+                                                 digits=4))
 
