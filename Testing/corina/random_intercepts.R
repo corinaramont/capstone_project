@@ -2,7 +2,7 @@ library(lme4)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-library(coefplot2)
+library(lmerTest)
 
 #cleaned_pollutants_data = readRDS("datasets/cleaned_pollutant_data.dat")
 #life_expect = readRDS("datasets/life_expectancies_1959_2019.dat")
@@ -63,19 +63,83 @@ save(Y,file = "/Users/corinaramont/capstone_project/datasets/scrub_daddied_datas
 
 ######################################################
 load("datasets/scrub_daddied_dataset.Rda")
+library(lme4)
 
+pollutant_name = c("CO", "NO2", "Ozone", "SO2", "PM10", "PM2.5")
+
+Y_new = na.exclude(Y)
 #normal linear regression
 lin_out = lm(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
-               + Year ,data = Y)
+               + Year ,data = Y_new)
 summary(lin_out)
 
-#random intercepts model
+#random intercepts model: full model
 rand_int_out = lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
-                    + Year + (1|state) ,data = Y)
+                    + Year + (1|state) ,data = Y_new)
 summary(rand_int_out)
+
+#full model with year^2
+rand_int_out1 = lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 
+                    + (Year**2) + (1|state) ,data = Y_new)
+summary(rand_int_out1)
 
 #check random intercepts model assumptions?
 plot(rand_int_out)
 
 qqnorm(resid(rand_int_out))
 qqline(resid(rand_int_out))
+
+#model w/o PM10 & SO2
+rand_int_out2 = lmer(LifeExpect ~ CO + NO2 + Ozone + PM2.5 
+                    + Year + (1|state) ,data = Y_new)
+summary(rand_int_out2)
+
+#w/o PM10 only
+rand_int_out3 = lmer(LifeExpect ~ CO + NO2 + Ozone + PM2.5 + SO2 
+                     + Year + (1|state) ,data = Y_new)
+summary(rand_int_out3)
+
+#w/o PM10 only and year^2
+rand_int_out4 = lmer(LifeExpect ~ CO + NO2 + Ozone + PM2.5 + SO2 
+                     + (Year**2) + (1|state) ,data = Y_new)
+
+#w/o PM10 and SO2, log(LifeExpect)
+rand_int_out5 = lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 
+                     + Year + (1|state) ,data = Y_new)
+
+#w/o PM10 and SO2, log(LifeExpect), log(year)
+rand_int_out6 = lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 
+                     + log(Year) + (1|state) ,data = Y_new)
+
+#homogenity of variance
+plot(fitted(rand_int_out6),sqrt(resid(rand_int_out6)))
+gg_scalelocation(rand_int_out6, method = "loess", scale.factor = 1,
+                 se = FALSE)
+
+#
+
+#anova
+anova(rand_int_out, rand_int_out1, rand_int_out2, rand_int_out3,
+      rand_int_out4, rand_int_out5, rand_int_out6)
+
+#######################################
+
+sam = lmer(LifeExpect ~ CO + NO2 + SO2 + PM10 + (1|state), verbose=T, data=Y_new)
+sam2 = lmer(log(LifeExpect) ~ CO + NO2 + PM2.5 + Year + (1|state), verbose=T, data=Y_new)
+may <- lmer(log(LifeExpect) ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new)
+corina = rand_int_out6
+win = lmer(LifeExpect ~ CO + NO2 + PM2.5 + log(Year) + (1|state), data = Y_new)
+summary(win)
+win2 = lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new)
+summary(win2)
+
+#asumptions
+plot(win2)
+qqnorm(resid(win2))
+qqline(resid(win2))
+
+anova(win, win2)
+
+#win2 is our final model!
+
+
