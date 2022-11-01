@@ -42,9 +42,9 @@ qqnorm(resid(no_SO2_Ozone_fit)); qqline(resid(no_SO2_Ozone_fit)) #not quite norm
 hist(resid(no_SO2_Ozone_fit)) #skewed to the left 
 ################################################################################################################################
  
-log_lifeexpect <- lmer(log(LifeExpect) ~ CO + NO2 + Ozone + PM2.5 + Year + (1|state), data = data)
-anova(no_SO2_Ozone_fit, log_lifeexpect)
-plot(fitted(log_lifeexpect), residuals(log_lifeexpect)) #
+log_lifeexpect <- lmer(log(LifeExpect) ~ CO + NO2 + PM2.5 + Year + (1|state), data = data)
+anova(no_SO2_Ozone_fit, log_lifeexpect) #log_lifeexpect is better
+plot(fitted(log_lifeexpect), residuals(log_lifeexpect)) 
 hist(resid(log_lifeexpect))
 qqnorm(resid(log_lifeexpect)); qqline(resid(log_lifeexpect))
 
@@ -55,8 +55,9 @@ qqnorm(resid(log_lifeexpect)); qqline(resid(log_lifeexpect))
 
 
 
+lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM2.5 + Year + (1|state), data = data) #mixed model
 
 
-
-
+model1 <- lm(response ~ variable1) #linear model 
+model2 <- lm(response ~ variable1 + log(variable2)) #linear 
 
