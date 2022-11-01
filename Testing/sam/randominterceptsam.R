@@ -53,7 +53,14 @@ for (i in 1:10) {
 #Using lme4 with splines
 
 #Original Model
-fit <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + (1|state), verbose = T, data = Y)
+fit <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM10 + PM2.5 + Year + (1|state), verbose = T, data = Y[!is.na(Y$PM10),])
+
+fitnopm10 <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2 + PM2.5 + Year + (1|state), verbose = T, data = Y[!is.na(Y$PM10),])
+
+summary(fitnopm10)
+
+anova(fit, fitnopm10)
+
 plot(residuals(fit), fitted(fit))
 plot(fit)
 qqnorm(resid(fit)); qqline(resid(fit)) #not quite as normal 
@@ -71,22 +78,39 @@ predict(fit, newdata = data.frame(CO = 0, NO2 = 0, Ozone = 0, SO2 = 0,
 
 
 #Added the spline fit
-splinefit <- lmer(LifeExpect ~ bs(CO) + bs(NO2) + bs(Ozone) + bs(SO2) + bs(PM10) + bs(PM2.5) + (1|state), verbose = T, data = Y)
+splinefit <- lmer(LifeExpect ~ bs(CO) + bs(NO2) + bs(Ozone) + bs(SO2) + bs(PM10) + bs(PM2.5) + (1|state), verbose = T, data = Y[!is.na(Y$PM10),])
 plot(residuals(splinefit), fitted(splinefit))
 plot(splinefit)
 qqnorm(resid(splinefit)); qqline(resid(splinefit)) # Maybe a bit better than fit
 
 summary(splinefit)
-anova(splinefit)
+anova(fit, splinefit)
 
 #Quadratic term for year
-fityearquad <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2  + PM2.5 + Year + I(Year^2) + (1|state), verbose = T, data = Y)
+fityearquad <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2  + PM2.5 + Year + I(Year^2) + (Year|state), verbose = T, data = Y[!is.na(Y$PM10),])
+
 summary(fityearquad)
-anova(fityearquad)
+anova(fit, fityearquad)
 qqnorm(resid(fityearquad)); qqline(resid(fityearquad))
+
+coef(fityearquad)
 
 BIC(fityearquad)
 BIC(fit)
+
+#Fit with year as random slope and state as random intercept
+fitrandslope <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2  + PM2.5 + (Year|state), verbose = T, data = Y[!is.na(Y$PM10),])
+
+fittemp <- lmer(LifeExpect ~ CO + NO2 + Ozone + SO2  + PM2.5 + Year  + (Year|state), verbose = T, data = Y[!is.na(Y$PM10),])
+
+coef(fittemp)
+
+summary(fitrandslope)
+
+
+coef(fitrandslope)
+
+
 
 #I think the quad term for year is pretty good
 
@@ -96,9 +120,11 @@ b = c(2,3,5)
 cor(Y$PM2.5, Y$PM10, use="complete.obs")
 cor(Y$CO, Y$NO2,use="complete.obs")
 
-cor(a,b)
 
 chart.Correlation(Y[,c(-1,-2)])
+
+
+
 
 
 

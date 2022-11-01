@@ -81,7 +81,7 @@ assign(nam, aqs_annualsummary_by_state(parameter = pollutatntcodes,
                                        stateFIPS = statecodes48))
 
 #temp var that gives the name for the file to be saved
-temp = paste("pollutantdata",substr(year,1,4),".rds",sep="" )
+temp = paste("pollutantdata",substr(year,1,4),".rds",sep="")
 
 #saves the data so that we dont have to rely on the api calls 
 saveRDS(nam, temp)
@@ -126,7 +126,7 @@ for (i in 0:17) {
   #this makes it so that we loop by a single year 
   year = year + 10000
 }
-#forgive me for this 
+#forgive me for this
 saveRDS(pollutantdata1980, "pollutantdata1980.rds")
 saveRDS(pollutantdata1981, "pollutantdata1981.rds")
 saveRDS(pollutantdata1982, "pollutantdata1982.rds")
