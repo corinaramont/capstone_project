@@ -7,7 +7,7 @@ library(lme4)
 load("datasets/scrub_daddied_dataset.Rda")
 
 #model
-model = lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new)
+model = lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = na.exclude(Y))
 model_coef = summary(model)$coef
 state_int = coef(model)$state[1]
 Y = Y%>%filter(!state %in% c("Nebraska") )
