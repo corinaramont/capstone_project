@@ -9,7 +9,7 @@ Y_new = na.exclude(Y)
 #origmodel 
 #= lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new)
 
-#validation set approach
+###########validation set approach##############
 set.seed(123)
 
 #create training data as 80% of dataset
@@ -25,6 +25,22 @@ model = lmer(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state),
 predictions = predict(model, testing_data)
 
 data.frame(R2 = R2(predictions, testing_data$LifeExpect),
-            RMSE = RMSE(predictions, testing_data$LifeExpect),
-            MAE = MAE(predictions, testing_data$Life_Expect))
+           RMSE = RMSE(predictions, testing_data$LifeExpect),
+           MAE = MAE(predictions, testing_data$Life_Expect))
+
+##############3Leave One Out Cross Validation##################
+train_control = trainControl(method = "LOOCV")
+
+# training the model by assigning sales column
+# as target variable and rest other column
+# as independent variable
+model =- train(LifeExpect ~ CO + NO2 + PM2.5 + Year + (1|state), data = Y_new,
+               method = "lmerMod",
+               trControl = train_control)
+
+# printing model performance metrics
+# along with other details
+print(model)
+
+
 
