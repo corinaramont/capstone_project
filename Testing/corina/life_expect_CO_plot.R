@@ -90,3 +90,37 @@ Y_2019_new = data.frame(State = Y_2019$state, Actual.Life.Expect = Y_2019$LifeEx
                         Prop.Life.Expect = round(((Y_2019$LifeExpect - expect_2019)/Y_2019$LifeExpect)*100,
                                                  digits=4))
 
+######################################3
+
+#2001
+Y_2001 = Y_new%>%filter(Year==2001)
+expect_2001 = predict_life_expect(Y_2001, 2001,y=mean(Y_2001$NO2),
+                                  z=mean(Y_2001$PM2.5))
+#compare differences in calculations vs original
+Y_2001_new = data.frame(State = Y_2001$state, 
+                        Actual.Life.Expect = Y_2001$LifeExpect,
+                        Calc.Life.Expect = expect_2001,
+                        Prop.Life.Expect = round(((Y_2001$LifeExpect - expect_2001)/Y_2001$LifeExpect)*100,
+                                                 digits=4))
+
+#2005
+Y_2005 = Y_new%>%filter(Year==2005)
+expect_2005 = predict_life_expect(Y_2005, 2005,y=mean(Y_2005$NO2),
+                                  z=mean(Y_2005$PM2.5))
+#compare differences in calculations vs original
+Y_2005_new = data.frame(State = Y_2005$state, 
+                        Actual.Life.Expect = Y_2005$LifeExpect,
+                        Calc.Life.Expect = expect_2005,
+                        Prop.Life.Expect = round(((Y_2005$LifeExpect - expect_2005)/Y_2005$LifeExpect)*100,
+                                                 digits=4))
+
+#2018
+Y_2018 = Y_new%>%filter(Year==2018)
+expect_2018 = predict_life_expect(Y_2018, 2018,y=mean(Y_2018$NO2),
+                                  z=mean(Y_2018$PM2.5))
+#compare differences in calculations vs original
+Y_2018_new = data.frame(State = Y_2018$state, 
+                        Actual.Life.Expect = Y_2018$LifeExpect,
+                        Calc.Life.Expect = expect_2018,
+                        Prop.Life.Expect = round(((Y_2018$LifeExpect - expect_2018)/Y_2018$LifeExpect)*100,
+                                                 digits=4))
