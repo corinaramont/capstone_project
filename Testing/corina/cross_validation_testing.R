@@ -27,6 +27,10 @@ predictions = predict(model, testing_data)
 data.frame(R2 = R2(predictions, testing_data$LifeExpect),
            RMSE = RMSE(predictions, testing_data$LifeExpect),
            MAE = MAE(predictions, testing_data$Life_Expect))
+#doesn't return MAE??
+model_MSE = mean((predictions-testing_data$LifeExpect)^2)
+#MSE = 0.1752
+model_MAE = mean(abs((predictions-testing_data$LifeExpect))) #0.3480
 
 ##############3Leave One Out Cross Validation##################
 train_control = trainControl(method = "LOOCV")
